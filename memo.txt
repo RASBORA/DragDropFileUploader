@@ -1,0 +1,15 @@
+Apache設定例
+WSGIPythonPath ""
+DocumentRoot ""
+<Directory "">
+    Options Indexes FollowSymLinks Includes ExecCGI
+    AddHandler wsgi-script .py
+    AllowOverride All
+    Require all granted
+</Directory>
+
+参考文献
+https://developer.mozilla.org/ja/docs/Using_files_from_web_applications
+http://www.html5rocks.com/en/tutorials/file/xhr2/#toc-send-formdata
+http://stackoverflow.com/questions/3315429/xhr-sendfile-doesnt-post-it-as-multipart
+
