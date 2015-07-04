@@ -1,14 +1,32 @@
+<html>
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
-function getList(){
+
+//1ページで読み込む
+var viewperpage = 1000;
+
+function getList(func,viewcount,page){
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "/preview.py", true);
+	var url = "/preview.py?";
+	if(viewcount){
+		url+="count="+viewcount+"&"
+	}
+	if(page){
+		url+="page="+page+"&"
+	}
+	xhr.open("GET",url, true);
+	var formData = new FormData();
+	
+	xhr.send(formData);
+	//xhr.timeout=5000;
 	xhr.onload = function (e) {
 	  if (xhr.readyState === 4) {
 	    if (xhr.status === 200) {
-	      console.log(xhr.responseText);
-	      return xhr.responseText;
-	    } else {
+	    	//console.log(xhr.responseText);
+	    	
+	    	func(xhr.responseText);
+	   	} else {
 	      //console.error(xhr.statusText);
 	    }
 	  }
@@ -16,18 +34,60 @@ function getList(){
 	xhr.onerror = function (e) {
 	  console.error(xhr.statusText);
 	};
+
+	
+}
+function getList2(func){
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "/preview.py", false);
 	xhr.send(null);
+
+	if (xhr.status === 200) {	
+	  	return xhr.responseText;
+	}
+
 }
 window.onload = function(){
-	console.log("jaso");
-	var picturelist = JSON.parse(getList());
-	console.log(picturelist);
-	for(var i=0;i<picture.length;i++){
-		console.log(picturelist[i]["url"]);
-	}
+	
+	getList(function(text){
+		var picturelist = JSON.parse(text);
+		
+		var previewlist = document.getElementById("previewlist");
+		for(var i=0;i<picturelist.length && i<viewperpage;i++){
+			//console.log(picturelist[i]["url"]);
+			var div = document.createElement("div");
+			div.setAttribute("class","image-preview");
+			var a = document.createElement("a");
+			a.href=picturelist[i]["preview"];
+			a.setAttribute("target","_blank");
+			var img = document.createElement("img");
+      		img.src = picturelist[i]["preview"];
+      		//img.height = 300;
+      		img.setAttribute("height","300");
+      		div.setAttribute("style","float:left;");
+      		a.appendChild(img);
+      		div.appendChild(a);
+      		previewlist.appendChild(div);
+
+		}
+	})
 }
 
 </script>
-
-preview
-<div id="previewlist"></div>
+<style>
+	body{
+		
+	}
+	.image-preview{
+		border-width: 1px;
+		border-color: #000000;
+		border-style: solid;
+		margin:2px;
+	}
+</style>
+</head>
+<body>
+	preview
+	<div id="previewlist"></div>
+</body>
+</html>
