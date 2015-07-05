@@ -8,9 +8,10 @@ database = sqlite3.connect('./illust.sqlite3')
 
 database.execute('''
 create table illustindex(
-	pixivid integer primary key,
+	pixivid int primary key,
 	revision integer,
-	user text
+	userid int,
+	isdelete int
 	);	''')
 
 database.execute("""
@@ -49,6 +50,12 @@ database.execute("""
 create table tag(
 	tagid integer primary key,
 	tagname text
+	);	""")
+
+database.execute("""
+create table user(
+	userid int primary key,
+	name text
 	);	""")
 
 database.commit()

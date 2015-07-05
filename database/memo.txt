@@ -1,7 +1,10 @@
 ﻿主キー*
+#date はPixivから取得した日付
+#getdateはデータをデータベースに登録した日付
+
 
 index
-[*pixivid,*revision,user]
+[*pixivid,revision,userid,getdate,isdelete]
 
 illustdata
 [pixivid,revision,date,title,caption,bookmarkcount,viewcount,point,pointclick]
@@ -14,3 +17,7 @@ tagmap
 
 tag
 [*tagid,tagname]
+
+#とりあえず使わない
+user
+[userid,name]
