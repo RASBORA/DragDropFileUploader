@@ -1,0 +1,16 @@
+﻿主キー*
+
+index
+[*pixivid,*revision,user]
+
+illustdata
+[pixivid,revision,date,title,caption,bookmarkcount,viewcount,point,pointclick]
+
+illust
+[pixivid,revision,savename,page,md5]
+
+tagmap
+[pixivid,tagid]
+
+tag
+[*tagid,tagname]
