@@ -39,30 +39,39 @@ def application(environ, start_response):
         post_env['QUERY_STRING'] = ''
         try:
             form = cgi.FieldStorage(fp=wsgi_input,environ=post_env,keep_blank_values=True)
-            #インスタンスが一つと想定
-            post_data1 = form["file1"]
-            if post_data1.file:
-                if not os.path.isdir(upload_folder+common.datadir):
-                    os.mkdir("data",0777)
-                filehash = hashlib.sha256(post_data1.file.read())
-                post_data1.file.seek(0)
-                filename = filehash.hexdigest()
-                #拡張子
-                ext = os.path.splitext(post_data1.filename)[1]
-                savefullpath = common.datadir+filename+ext
-                if not os.path.isfile(savefullpath):
-                    print_char += post_data1.filename
-                    
-                    fp = open(savefullpath,"wb")
-                    fp.write(post_data1.file.read())
-                    fp.close()
-                else:
-                    print_char += "this file uploaded"
+
+            if not os.path.isdir(upload_folder+common.datadir):
+                os.mkdir("data",0777)
+
+            file1 = form["file1"]
+            if isinstance(file1, list):
+                #file1の[0]に変なの入ってるぽい
+                for f in file1[1:]:
+                    print_char += writeFile(f)
             else:
-                print_char += "not found files"
+                print_char += writeFile(file1)
         except:
-            print_char += "file upload failed"
+            print_char += "file upload failed<br>"
             traceback.print_exc(file=sys.stdout)
         
 
     return print_char + "<br>PAGE END<br>" + debug_char
+
+def writeFile(filehandle):
+    if filehandle.file:
+        filehash = hashlib.sha256(filehandle.file.read())
+        filehandle.file.seek(0)
+        filename = filehash.hexdigest()
+        #拡張子
+        ext = os.path.splitext(filehandle.filename)[1]
+        savefullpath = common.datadir+filename+ext
+        if not os.path.isfile(savefullpath):
+            #print_char += filehandle.filename       
+            fp = open(savefullpath,"wb")
+            fp.write(filehandle.file.read())
+            fp.close()
+            return filehandle.filename+" - success<br>"
+        else:
+            return filehandle.filename+" - file exist<br>"
+    else:
+        return "not contain files<br>"
