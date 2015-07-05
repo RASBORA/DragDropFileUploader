@@ -2,3 +2,4 @@
 data/
 environment.py
 *.pyc
+*.sqlite3
