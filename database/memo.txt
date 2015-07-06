@@ -9,8 +9,9 @@ index
 illustdata
 [pixivid,revision,date,title,caption,bookmarkcount,viewcount,point,pointclick]
 
+#ページなしはpage0で
 illust
-[pixivid,revision,savename,page,md5]
+[pixivid,revision,savename,page,sha256]
 
 tagmap
 [pixivid,tagid]

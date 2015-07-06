@@ -46,26 +46,24 @@ def insert(pixivid,userid,date=None,title=None,caption=None,bookmarkcount=None,v
 
 		revision=rev_row["revision"]+1
 		databese.execute("update index set revision=?,getdate=?,isdelete=?",revision,getdate,isdelete)
-
-
 	else:
 		#INSERT
 		databese.execute("insert into index values(?,?,?,?)",(pixivid,revision,userid,getdate,0));
-		databese.execute("insert into illustdata values(?,?,?,?,?,?,?,?,?)",\
-		(pixivid,revision,date,title,caption,bookmarkcount,viewcount,point,pointclick));
 
-		count = 1;
-		for f in files:
-			databese.execute("insert into illust values(?,?,?,?,?)",(pixivid,revision,f[0],count,f[1]))
-			count++
-		for t in tags:
-			databese.execute("select * from tag where tagname=? ",t);
-			indexrow = database.fetchone()
-			if indexrow!=None:
-				databese.execute("insert into tag(tagname) values(?)",(t,))
-				indexrow = databese.execute("select * from tag where tagname "%str(t));
-			tagid = indexrow["tagid"]
-			databese.execute("insert into tagmap values(?,?)",(pixivid,tagid))
+	databese.execute("insert into illustdata values(?,?,?,?,?,?,?,?,?)",\
+	(pixivid,revision,date,title,caption,bookmarkcount,viewcount,point,pointclick));
+	count = 1;
+	for f in files:
+		databese.execute("insert into illust values(?,?,?,?,?)",(pixivid,revision,f[0],count,f[1]))
+		count++
+	for t in tags:
+		databese.execute("select * from tag where tagname=? ",t);
+		indexrow = database.fetchone()
+		if indexrow!=None:
+			databese.execute("insert into tag(tagname) values(?)",(t,))
+			indexrow = databese.execute("select * from tag where tagname "%str(t));
+		tagid = indexrow["tagid"]
+		databese.execute("insert into tagmap values(?,?)",(pixivid,tagid))
 
 	database.commit()
 	database.close()
